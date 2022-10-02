@@ -162,7 +162,7 @@ const infoExercises = {
       "Lower back injury",
       "Shoulder strain due to heavy barbell",
     ],
-    alternativeWorkouts: ["Leg Press", "Hip Thursts"],
+    alternativeWorkouts: ["Leg Press", "Hip Thrusts"],
     videoURL:
       "https://fitnessprogramer.com/wp-content/uploads/2021/02/BARBELL-SQUAT.gif",
     images: [
