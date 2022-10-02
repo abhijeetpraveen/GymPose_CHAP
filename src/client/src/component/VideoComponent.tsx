@@ -10,6 +10,10 @@ import {
   ThemeIcon,
   Stack,
   Group,
+  Paper,
+  Text,
+  Title,
+  Button,
 } from "@mantine/core";
 import { IconChevronsUp } from "@tabler/icons";
 import Model, { IExerciseData } from "react-body-highlighter";
@@ -55,7 +59,8 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
   },
   model: {
-    width: "37%",
+    marginTop:'30px',
+    width: "40%",
   },
   stack: {
     marginLeft: "100px",
@@ -69,6 +74,33 @@ const useStyles = createStyles((theme) => ({
     textAlign: "center",
     // marginTop: "15px",
     fontSize: "30px",
+  },
+  card: {
+    height: 200,
+    width: 300,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  },
+
+  title: {
+    fontFamily: `Anton`,
+    fontWeight: 900,
+    color: theme.white,
+    textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
+    lineHeight: 1.2,
+    fontSize: 32,
+    marginTop: theme.spacing.xs,
+  },
+
+  category: {
+    color: theme.black,
+    opacity: 0.7,
+    fontWeight: 700,
+    textTransform: "uppercase",
   },
 }));
 
@@ -86,7 +118,7 @@ const infoExercises = {
       "High frequency/volume benching can slow muscle recovery",
       "High frequency/volume benching can stress muscles, joints, and tissues of the upper body",
     ],
-    alternativeWorkouts: ["Flat dumbbell Press", "Weighted Pushups"],
+    alternativeWorkouts: ["Weighted Pushups", "Flat dumbbell Press"],
     videoURL:
       "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Bench-Press.gif",
     images: [
@@ -95,7 +127,7 @@ const infoExercises = {
     ],
   },
 
-  Deadlift: {
+  DeadLift: {
     name: "Deadlift",
     muscleGroup: "Back & Legs",
     Pros: [
@@ -108,7 +140,7 @@ const infoExercises = {
       "Places great stress on the hips, knees, ankles and lower back",
       "Ability to lift heavy with improper form",
     ],
-    alternativeWorkouts: ["Dumbbell RDLs", "Cable stiff-leg Deadlift"],
+    alternativeWorkouts: ["Cable stiff-leg Deadlift","Dumbbell RDL"],
     videoURL:
       "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Deadlift.gif",
     images: [
@@ -152,7 +184,7 @@ const infoExercises = {
       "Can cause bicep tendonitis",
       "Does not significantly improve grip strength",
     ],
-    alternativeWorkouts: ["Hammer Curls", "Preacher Curls"],
+    alternativeWorkouts: ["Preacher Curls", "Hammer Curls"],
     videoURL:
       "https://fitnessprogramer.com/wp-content/uploads/2022/04/Double-Arm-Dumbbell-Curl.gif",
     images: [
@@ -174,7 +206,7 @@ const infoExercises = {
       "Does not target the front delts or traps",
       "Risk of shoulder injury",
     ],
-    alternativeWorkouts: ["Upright Rows, Shoulder Press"],
+    alternativeWorkouts: ["Shoulder Press", "Upright Rows"],
     videoURL:
       "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif",
     images: [
@@ -184,8 +216,8 @@ const infoExercises = {
   },
 
   ShoulderPress: {
-    name: "Shoulders",
-    muscleGroup: "Chest & Triceps",
+    name: "Shoulder Press",
+    muscleGroup: "Shoulders",
     Pros: [
       "Engages all muscles of the shoulder",
       "Can help strengthen your triceps",
@@ -196,7 +228,7 @@ const infoExercises = {
       "Difficult to maintain a neutral spine",
       "May cause neck pain",
     ],
-    alternativeWorkouts: ["Landmine Press", "Military Press"],
+    alternativeWorkouts: ["Military Press", "Landmine Press"],
     videoURL:
       "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif",
     images: [
@@ -231,7 +263,7 @@ export function VideoComponent() {
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
   const [upload, setUpload] = useState(false);
-  const [exercise, setExercise] = useState("Waiting");
+  const [exercise, setExercise] = useState("");
   const [count, setCount] = useState(0);
   const data: IExerciseData[] = [
     { name: "Bench Press", muscles: ["chest", "triceps", "front-deltoids"] },
@@ -242,7 +274,7 @@ export function VideoComponent() {
     setCount(1);
     fetch("http://localhost:5000/classify")
       .then((response) => response.json())
-      .then((data) => setExercise(data["exercise"]));
+      .then((data) => {setExercise(data["exercise"]);setOpened((o) => !o)});
   }
 
   let displayData = {
@@ -254,6 +286,7 @@ export function VideoComponent() {
     videoURL: "",
     images: [""],
   };
+
 
   if (exercise == "Squat") {
     displayData = infoExercises.Squat;
@@ -270,8 +303,8 @@ export function VideoComponent() {
   if (exercise == "BicepCurl") {
     displayData = infoExercises.BicepCurl;
   }
-  if (exercise == "Deadlift") {
-    displayData = infoExercises.Deadlift;
+  if (exercise == "DeadLift") {
+    displayData = infoExercises.DeadLift;
   }
 
   return (
@@ -283,16 +316,12 @@ export function VideoComponent() {
       >
         <Center className={classes.container}>
           {upload ? (
-            <div
-              style={{ width: 240, marginLeft: "auto", marginRight: "auto" }}
-            >
               <Image
                 radius="md"
                 src="http://localhost:5000/video_feed"
                 alt="Random unsplash image"
                 style={{ width: 400, transform: "scaleY(-1)" }}
               />
-            </div>
           ) : (
             <DropzoneButton setUpload={setUpload}></DropzoneButton>
           )}
@@ -306,7 +335,8 @@ export function VideoComponent() {
           {opened ? (
             <Badge
               className={classes.diff}
-              color="green"
+              variant="filled"
+              color="teal"
               size="lg"
               onClick={() => setOpened((o) => !o)}
             >
@@ -316,12 +346,13 @@ export function VideoComponent() {
           ) : (
             <Badge
               className={classes.diff}
-              color="green"
+              variant="filled"
+              color="teal"
               size="lg"
               onClick={() => setOpened((o) => !o)}
             >
               {" "}
-              Details Here{" "}
+              Details{" "}
             </Badge>
           )}
         </div>
@@ -383,8 +414,44 @@ export function VideoComponent() {
               </List>
             </div>
             <Center mt={"10%"}>
-              <Image src={displayData.images[0]}></Image>
-              <Image src={displayData.images[1]}></Image>
+              <Paper
+                shadow="md"
+                p="xl"
+                radius="md"
+                sx={{ backgroundImage: `url(${displayData.images[0]})` }}
+                className={classes.card}
+              >
+                <div>
+                  <Text className={classes.category} size="xs">
+                    {displayData.muscleGroup}
+                  </Text>
+                  <Title order={3} className={classes.title}>
+                    {displayData.alternativeWorkouts[0]}
+                  </Title>
+                </div>
+                <Button component="a" href="https://fitnessprogramer.com/exercise-primary-muscle/full-body/" variant="filled" color="dark">
+                  Read Article
+                </Button>
+              </Paper>
+              <Paper
+                shadow="md"
+                p="xl"
+                radius="md"
+                sx={{ backgroundImage: `url(${displayData.images[1]})` }}
+                className={classes.card}
+              >
+                <div>
+                  <Text className={classes.category} size="xs">
+                    {displayData.muscleGroup}
+                  </Text>
+                  <Title order={3} className={classes.title}>
+                    {displayData.alternativeWorkouts[1]}
+                  </Title>
+                </div>
+                <Button component="a" href="https://fitnessprogramer.com/exercise-primary-muscle/full-body/" variant="filled" color="dark">
+                  Read article
+                </Button>
+              </Paper>
             </Center>
           </Stack>
         </div>

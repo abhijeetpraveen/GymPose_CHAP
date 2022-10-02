@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { Text, Group, Button, createStyles } from "@mantine/core";
-import { IconDatabase } from "@tabler/icons";
+import { IconBarbell } from "@tabler/icons";
 import { IconCloudUpload, IconX, IconDownload } from "@tabler/icons";
 
 const useStyles = createStyles((theme) => ({
@@ -29,6 +29,7 @@ const useStyles = createStyles((theme) => ({
     bottom: -20,
     backgroundColor: theme.colors.dark[9],
   },
+
 }));
 
 export function DropzoneButton(props:any) {
@@ -62,7 +63,7 @@ export function DropzoneButton(props:any) {
         id="contained-button-file"
       />
       <label htmlFor="contained-button-file">
-        <Button size = "xl" leftIcon={<IconDatabase size={20} />} color="blue" component="span">
+        <Button size = "lg" leftIcon={<IconBarbell size={20} />} variant="white" component="span" color="dark">
           Upload your Workout
         </Button>
       </label>

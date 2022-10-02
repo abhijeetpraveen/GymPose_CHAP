@@ -83,7 +83,7 @@ export function HeaderMenuColored({ links }: HeaderSearchProps) {
       <Container>
         <div className={classes.inner}>
           <div style = {{display:"flex"}}>
-          <Image src="https://i.imgur.com/7sAonl1.png"
+          <Image src="https://i.ibb.co/NjyHTGK/Logo.png"
             width={70} height={50}/>
           <div className = {classes.headertitle}> GYMPOSE </div>
           </div>
