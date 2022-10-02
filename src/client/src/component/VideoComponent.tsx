@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Center,
   Image,
@@ -69,7 +69,7 @@ const useStyles = createStyles((theme) => ({
     textAlign: "center",
     // marginTop: "15px",
     fontSize: "30px",
-  }
+  },
 }));
 
 const infoExercises = {
@@ -89,6 +89,10 @@ const infoExercises = {
     alternativeWorkouts: ["Flat dumbbell Press", "Weighted Pushups"],
     videoURL:
       "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Bench-Press.gif",
+    images: [
+      "https://i.shgcdn.com/6021fe34-c05c-4405-ad53-9fd86eb55d16/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+      "https://static.strengthlevel.com/images/illustrations/dumbbell-bench-press-1000x1000.jpg",
+    ],
   },
 
   Deadlift: {
@@ -107,6 +111,10 @@ const infoExercises = {
     alternativeWorkouts: ["Dumbbell RDLs", "Cable stiff-leg Deadlift"],
     videoURL:
       "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Deadlift.gif",
+    images: [
+      "https://www.muscleandfitness.com/wp-content/uploads/2019/09/pull-through.jpg?w=1109&quality=86&strip=all",
+      "https://www.yourtrainerpaige.com/wp-content/uploads/2013/11/image59.png",
+    ],
   },
 
   Squat: {
@@ -125,6 +133,10 @@ const infoExercises = {
     alternativeWorkouts: ["Leg Press", "Hip Thursts"],
     videoURL:
       "https://fitnessprogramer.com/wp-content/uploads/2021/02/BARBELL-SQUAT.gif",
+    images: [
+      "https://www.inspireusafoundation.org/wp-content/uploads/2021/10/leg-press-machine-1024x430.png",
+      "https://static.strengthlevel.com/images/illustrations/hip-thrust-1000x1000.jpg",
+    ],
   },
 
   BicepCurl: {
@@ -143,6 +155,10 @@ const infoExercises = {
     alternativeWorkouts: ["Hammer Curls", "Preacher Curls"],
     videoURL:
       "https://fitnessprogramer.com/wp-content/uploads/2022/04/Double-Arm-Dumbbell-Curl.gif",
+    images: [
+      "https://www.inspireusafoundation.org/wp-content/uploads/2022/03/preacher-curl-benefits.png",
+      "https://cdn.shopify.com/s/files/1/1876/4703/files/shutterstock_419477203_480x480.jpg?v=1636560233",
+    ],
   },
 
   LateralRaise: {
@@ -161,6 +177,10 @@ const infoExercises = {
     alternativeWorkouts: ["Upright Rows, Shoulder Press"],
     videoURL:
       "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif",
+    images: [
+      "https://s3.amazonaws.com/prod.skimble/assets/1904357/image_iphone.jpg",
+      "https://liftingfaq.com/wp-content/uploads/2022/03/upright-row-muscles-1024x770.png",
+    ],
   },
 
   ShoulderPress: {
@@ -179,6 +199,10 @@ const infoExercises = {
     alternativeWorkouts: ["Landmine Press", "Military Press"],
     videoURL:
       "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif",
+    images: [
+      "https://cdn.mos.cms.futurecdn.net/vNWR5RHgC8KsMoMGTSxEdS-1200-80.jpg",
+      "https://www.fitnessandpower.com/wp-content/uploads/2016/07/landmine-anti-rotation.jpg",
+    ],
   },
 };
 
@@ -203,41 +227,36 @@ const data = [
   },
 ];
 
-
-
 export function VideoComponent() {
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
   const [upload, setUpload] = useState(false);
-  const [exercise,setExercise] = useState("Waiting")
-  const [count, setCount] = useState(0)
+  const [exercise, setExercise] = useState("Waiting");
+  const [count, setCount] = useState(0);
   const data: IExerciseData[] = [
     { name: "Bench Press", muscles: ["chest", "triceps", "front-deltoids"] },
     { name: "Push Ups", muscles: ["chest"] },
   ];
 
-  if (upload===true && count===0){
+  if (upload === true && count === 0) {
     setCount(1);
     fetch("http://localhost:5000/classify")
       .then((response) => response.json())
       .then((data) => setExercise(data["exercise"]));
-
   }
 
-  
   let displayData = {
     name: "",
     muscleGroup: "",
-    Pros: [''
-    ],
-    Cons: [''
-    ],
-    alternativeWorkouts: [''],
-    videoURL:""
+    Pros: [""],
+    Cons: [""],
+    alternativeWorkouts: [""],
+    videoURL: "",
+    images: [""],
   };
 
-  if (exercise=="Squat"){
-    displayData=infoExercises.Squat
+  if (exercise == "Squat") {
+    displayData = infoExercises.Squat;
   }
   if (exercise == "ShoulderPress") {
     displayData = infoExercises.ShoulderPress;
@@ -245,16 +264,15 @@ export function VideoComponent() {
   if (exercise == "BenchPress") {
     displayData = infoExercises.BenchPress;
   }
-  if (exercise=="LateralRaise"){
-    displayData=infoExercises.LateralRaise
+  if (exercise == "LateralRaise") {
+    displayData = infoExercises.LateralRaise;
   }
-  if (exercise=="BicepCurl"){
-    displayData=infoExercises.BicepCurl
+  if (exercise == "BicepCurl") {
+    displayData = infoExercises.BicepCurl;
   }
   if (exercise == "Deadlift") {
     displayData = infoExercises.Deadlift;
   }
-
 
   return (
     <>
@@ -317,11 +335,7 @@ export function VideoComponent() {
 
         <div className={classes.moredetails}>
           <Center className={classes.model}>
-            <Image
-              src={displayData.videoURL}
-              ml="40px"
-              mt="30px"
-            />
+            <Image src={displayData.videoURL} ml="40px" mt="30px" />
           </Center>
           <Stack align="flex-start" className={classes.stack}>
             <div>
@@ -368,14 +382,9 @@ export function VideoComponent() {
                 </List.Item>
               </List>
             </div>
-            <Center ml={"52%"} mt={"10%"}>
-              {/* <Image
-                src="https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Bench-Press.gif"
-                width={"90%"}
-                height={"90%"}
-                //ml={20}
-              /> */}
-              <CardsCarousel data={data}></CardsCarousel>
+            <Center mt={"10%"}>
+              <Image src={displayData.images[0]}></Image>
+              <Image src={displayData.images[1]}></Image>
             </Center>
           </Stack>
         </div>
