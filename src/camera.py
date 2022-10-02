@@ -4,7 +4,7 @@ import mediapipe as mp
 
 class VideoCamera(object):
     def __init__(self):
-      self.video = cv2.VideoCapture("src\VideoUploaded\exercise.mov")
+      self.video = cv2.VideoCapture("src/VideoUploaded/exercise.mov")
 
     def __del__(self):
       self.video.release()

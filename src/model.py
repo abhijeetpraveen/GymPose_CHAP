@@ -13,7 +13,7 @@ def predict():
     mpPose = mp.solutions.pose
     pose = mpPose.Pose()
 
-    cap = cv2.VideoCapture("src\VideoUploaded\exercise.mov")
+    cap = cv2.VideoCapture("src/VideoUploaded/exercise.mov")
 
     poseEstimates = []
 
@@ -80,7 +80,7 @@ def predict():
         a, b, c, d ,e , f , g = np.polyfit(x, y, 6) 
         features.extend([min(pandaPoseEstimates[key]), max(pandaPoseEstimates[key]), pandaPoseEstimates[key][0], a,b,c,d,e,f,g])
 
-    loaded_model = keras.models.load_model('src\GymPose_Model')
+    loaded_model = keras.models.load_model('src/GymPose_Model')
 
     # scaler = preprocessing.StandardScaler()
     # features_scaled= scaler.fit_transform([features])

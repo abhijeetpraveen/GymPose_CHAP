@@ -210,15 +210,14 @@ export function VideoComponent() {
   const [opened, setOpened] = useState(false);
   const [upload, setUpload] = useState(false);
   const [exercise,setExercise] = useState("Waiting")
+  const [count, setCount] = useState(0)
   const data: IExerciseData[] = [
     { name: "Bench Press", muscles: ["chest", "triceps", "front-deltoids"] },
     { name: "Push Ups", muscles: ["chest"] },
   ];
 
-   let count =0;
-
   if (upload===true && count===0){
-    count = 1;
+    setCount(1);
     fetch("http://localhost:5000/classify")
       .then((response) => response.json())
       .then((data) => setExercise(data["exercise"]));
