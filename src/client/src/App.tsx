@@ -5,7 +5,7 @@ import { VideoComponent } from "./component/VideoComponent";
 function App() {
   const linkData = [
     {
-      link: "https://devpost.com/submit-to/16239-mais-hacks-2022/manage/submissions/357448/project-overview",
+      link: "https://devpost.com/software/gympose",
       label: "About",
     },
   ];
