@@ -63,5 +63,11 @@ print(len(X_test))
 
 def create_LSTM_model(inputs):
     W={
-        "hidden": tf.Variable
+        "hidden": tf.Variable(tf.random_normal((36,64))),
+        "output": tf.Variable(tf.random_normal((64,6)))
     }
+    biases={
+        "hidden": tf.Variable(tf.random_normal([64],mean=1.0)),
+        "output": tf.Variable(tf.random_normal([6]))
+    }
+    lstm_layers=[tf.contrib.rnn.BasicLSTM]
