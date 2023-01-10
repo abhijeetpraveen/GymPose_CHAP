@@ -2,6 +2,7 @@ from pandas import read_csv
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+from tensorflow.keras import layers,models
 import tensorflow as tf
 
 exercises=["BC1","BC2","BC3","BC4","BC5","BP1","BP2","BP3","BP4","BP5","DL1","DL2","DL3","DL4","DL5","LR1","LR2","LR3","LR4","LR5","SP1","SP2","SP3","SP4","SP5","SQ1","SQ2","SQ3","SQ4","SQ5"]
@@ -61,76 +62,20 @@ X_train, X_test, y_train , y_test = train_test_split(reshaped_segments,labels,te
 print(len(X_train))
 print(len(X_test))
 
-def create_LSTM_model(inputs):
-    W={
-        "hidden": tf.Variable(tf.random_normal((36,64))),
-        "output": tf.Variable(tf.random_normal((64,6)))
-    }
-    biases={
-        "hidden": tf.Variable(tf.random_normal([64],mean=1.0)),
-        "output": tf.Variable(tf.random_normal([6]))
-    }
+n_steps= 65 
+n_features=36
+model1 = models.Sequential()
+model1.add(layers.LSTM(65,activation='relu', return_sequences=True, input_shape=(n_steps,n_features)))
+model1.add(layers.Dropout(0.15))
+model1.add(layers.LSTM(32,activation='relu'))
+model1.add(layers.Dropout(0.25))
+model1.add(layers.Dense(6,activation="softmax"))
+optimizer = tf.keras.optimizers.Adam(learning_rate=1e-5)
+model1.compile(loss="categorical_crossentropy", optimizer='adam',metrics=["accuracy","top_k_categorical_accuracy"])
 
-    X = tf.transpose(inputs,[1,0,2])
-    X = tf.reshape(X,[-1,36])
-    hidden = tf.nn.relu(tf.matmul(X,W['hidden'])+ biases["hidden"])
-    hidden = tf.split(hidden,65,0)
+model1.fit(X_train,y_train,epochs=176)
 
-    lstm_layers= [tf.contrib.rnn.BasicLSTMCell(64,forget_bias=0.1) for _ in range(2)]
-    lstm_layers = tf.contrib.rnn.MultiRNNCell(lstm_layers)
-    outputs, _ = tf.contrib.rnn.static_rnn(lstm_layers,hidden, dtype=tf.dfloat32)
+model1.evaluate(X_test,y_test)
 
-    lstm_last_output= outputs[-1]
-
-    return tf.matmul(lstm_last_output,W['output']) + biases['output']
-
-tf.reset_defeault_graph()
-
-X = tf.placeholder(tf.float32,[None, 65, 36], name="input")
-Y = tf.placeholder(tf.float32,[None, 6])
-
-pred_Y = create_LSTM_model(X)
-
-pred_softmax = tf.nn.softmax(pred_Y, name="y_")
-
-L2_LOSS= 0.0015
-
-l2 = l2_loss * sum(tf.nn.l2_loss(tf_var) for tf_var in tf.trainable_variables())
-
-loss = tf.reduce_mean(tf.softmaz_cross_entropy_with_logits(logits=pred_Y,labels=Y))+12
-
-LEARNING_RATE = 0.0025
-optimizer = tf.train.AdamOptimizer(learning_rate = LEARNING_RATE).minimize(loss)
-correct_pred = tf.equal(tf.argmax(pred_softmax, 1),tf.argmax(Y,1))
-accuracy = tf.reduce_mean(tf.cast(correct_pred,dtype=tf.float32))
-
-N_EPOCHS=50
-BATCH_SIZE=1024
-
-save=tf.train.Saver()
-history = dict(train_loss=[],train_acc=[],test_loc=[],test_acc=[])
-
-sess= tf.InteractiveSessin()
-sess.run(tf.global_variables_initializer())
-
-train_count = len(X_train)
-
-for i in range(1, N_EPOCHS+1):
-    for start,end in zip(range(0,train_count,BATCH_SIZE),range(BATCH_SIZE,train_count+1,BATCH_SIZE)):
-        sess.run(optimizer, feed_dict={X: X_train[start:end],Y: y_train[start:end]})
-    _, acc_train, loss_train = sess.run([pred_softmax,accuracy,loss], feed_dict={X: X_train, Y:y_train})
-    _, acc_test, loss_test = sess.run([pred_softmax,accuracy,loss], feed_dict={X: X_test, Y:y_test})
-
-    history["train_loss"].append(loss_train)
-    history["train_acc"].append(acc_train)
-    history["test_loss"].append(loss_test)
-    history["test_acc"].append(acc_test)
-
-    if i !=1 and i % 10 !=0:
-        continue
-
-    print( f'epoch: {i} test accuracy; {acc_test} loss: {loss_test}')
-
-predictions, acc_final, loss_final -sess.run([pred_softmax,accuracy,loss], feed_dict={X: X_test, Y:y_test})
-print()
-print(f'final results: accuracy:{acc_final} loss: {loss_final}')
+filename = 'GymPose_Model.pkl'
+model1.save(filename)
